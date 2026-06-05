@@ -1,0 +1,49 @@
+package com.travel.planner.DTO;
+
+public class Tour_resp_dto {
+    private Long userId;
+    private Long tourId;
+
+    private String tourType;
+    private int howMany;
+    private String tourName;
+
+    public Tour_resp_dto() {
+
+    }
+    //--누구의 여행인가
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    //--어느 여행인가
+    public Long getTourId() {
+        return tourId;
+    }
+    public void setTourId(Long tourId) {
+        this.tourId = tourId;
+    }
+    //--여행 종류
+    public String getTourType() {
+        return tourType;
+    }
+    public void setTourType(String tourType) {
+        this.tourType = tourType;
+    }
+    //--인원 수
+    public int getHowMany() {
+        return howMany;
+    }
+    public void setHowMany(int howMany) {
+        this.howMany = howMany;
+    }
+    //--여행명
+    public String getTourName() {
+        return tourName;
+    }
+    public void setTourName(String tourName) {
+        this.tourName = tourName;
+    }
+}
