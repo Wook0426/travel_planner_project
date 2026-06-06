@@ -29,14 +29,15 @@ public class Place_control {
     //서버에게 Tour_service의 객체 요청 (@service/Tour_service 발견시 서버가 자동으로 new Tour_service()생성)
     private Tour_api_service tour_api_service;          //그 객체 주소를 tour_service 변수에 삽입
 
+    @Autowired
+    private Place_service place_service;
+
     @PostMapping("/search")                      //Post 요청 처리 (Request + Post) : 문자열 반환
     public List<JsonNode> searchPlace(
             @RequestBody Place_req_dto request
     ) {
         return tour_api_service.callTourApi(request.getPlaceName());
     }
-    @Autowired
-    private Place_service place_service;
 
     @PostMapping("/save")
     public Long savaPlave(@RequestBody JsonNode item) {

@@ -17,7 +17,7 @@ public class Recomm_service {
         return tour_api_service.getRecommendTours( //tour_api_service의 getRecommendTours 함수와
                 dto.getCity(),
                 dto.getTheme(),
-                dto.getTheme()
+                dto.getProvince()
         );
     }
 }

@@ -6,6 +6,7 @@ import com.travel.planner.Repository.Place_repo; //db접근 명령을 위한 db�
 import org.springframework.stereotype.Service; //클래스 역할 명시
 import org.springframework.transaction.annotation.Transactional; // 기입 사항이 완성되어야만 db를 호출하는 어노테이션 transactional
 
+@Service
 public class Place_service {
     private final Place_repo placeRepo;
 
