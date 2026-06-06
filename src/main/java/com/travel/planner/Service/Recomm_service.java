@@ -15,9 +15,9 @@ public class Recomm_service {
 
     public List<JsonNode> recommend(Recomm_req_dto dto) { //Recomm_req_dto의 요청내용 연결
         return tour_api_service.getRecommendTours( //tour_api_service의 getRecommendTours 함수와
-                dto.getCity(),
                 dto.getTheme(),
-                dto.getProvince()
+                dto.getProvince(),
+                dto.getCity()
         );
     }
 }
