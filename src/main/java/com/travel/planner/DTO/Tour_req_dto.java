@@ -6,6 +6,8 @@ public class Tour_req_dto {
     private String tourType;
     private int howMany;
     private String tourName;
+    private String startDate;
+    private String endDate;
 
     public Tour_req_dto() {
 
@@ -44,5 +46,19 @@ public class Tour_req_dto {
     }
     public void setTourName(String tourName) {
         this.tourName = tourName;
+    }
+    //--여행 시작일
+    public String getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+    //--여행 종료일
+    public String getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

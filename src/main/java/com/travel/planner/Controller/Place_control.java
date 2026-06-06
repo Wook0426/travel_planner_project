@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.travel.planner.DTO.Place_resp_dto;     //서로다른 패키지의 클래스 접근은 import 요구됨
 import com.travel.planner.DTO.Place_req_dto;
 import com.travel.planner.Service.Tour_api_service;   //    "
+import com.travel.planner.Service.Place_service;
 
 import org.springframework.beans.factory.annotation.Autowired;  //spring에게 @객체 자동 연결 요청 (spring이 관리하는 객체 : bean)
 import org.springframework.web.bind.annotation.*;   //spring 웹 기능 전체(*) 사용
@@ -33,6 +34,13 @@ public class Place_control {
             @RequestBody Place_req_dto request
     ) {
         return tour_api_service.callTourApi(request.getPlaceName());
+    }
+    @Autowired
+    private Place_service place_service;
+
+    @PostMapping("/save")
+    public Long savaPlave(@RequestBody JsonNode item) {
+        return place_service.saveFromApi(item);
     }
     /*
     public Place_resp_dto searchPlace(@RequestParam String keyword) {   //DTO 객체 반환함수(url 값 인계 - 문자열 keyword 해당값)

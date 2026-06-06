@@ -19,7 +19,7 @@ public class Recomm_req_dto {
     public String getCity() {
         return city;
     }
-    public void setCity() {
+    public void setCity(String city) {
         this.city = city;
     }
     //--테마

@@ -33,6 +33,12 @@ public class Tour_domain {
 
     @Column(name = "tourName")
     private String tourName;
+    
+    @Column(name = "startDate")
+    private String startDate;
+    
+    @Column(name = "endDate")
+    private String endDate;
 
     public Tour_domain() {
         //JPA는 기본 생성자를 반드시 요구함
@@ -85,4 +91,14 @@ public class Tour_domain {
         this.tourName = tourName;
     }
     // 여행 이름 저장
-}
+    
+    public String getStartDate() {return startDate;}
+    //여행 시작일 반환
+    public void setStartDate(String startDate) {this.startDate = startDate;}
+    //여행 시작일 저장
+    
+    public String getEndDate() {return endDate;}
+    //여행 종료일 반환
+    public void setEndDate(String endDate) {this.endDate = endDate;}
+    //여행 종료일 저장
+ }

@@ -1,4 +1,5 @@
-package com.travel.planner.Domain;
+
+/*package com.travel.planner.Domain;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,3 +10,5 @@ public class Restaurant_place_domain extends Place_domain {
 
     }
 }
+
+ */

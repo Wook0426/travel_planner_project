@@ -27,6 +27,8 @@ public class Tour_convert_service {
         domain.setTourType(request.getTourType()); //무슨 여행인가
         domain.setHowMany(request.getHowMany()); //몇명이 가는가
         domain.setTourName(request.getTourName()); //여행명
+        domain.setStartDate(request.getStartDate()); //언제 가는가
+        domain.setEndDate(request.getEndDate()); //언제 오는가
 
         return domain;
     }
@@ -38,6 +40,8 @@ public class Tour_convert_service {
         response.setTourType(domain.getTourType());
         response.setHowMany(domain.getHowMany());
         response.setTourName(domain.getTourName());
+        response.setStartDate(domain.getStartDate());
+        response.setEndDate(domain.getEndDate());
 
         return response;
     }
