@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tour")
+@RequestMapping("/schedule")
 @CrossOrigin(origins = "*") //접근허용
 public class Schedule_control {
     @Autowired

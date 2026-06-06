@@ -65,14 +65,14 @@ public class User_domain {
     public String getLoginPassword() {
         return loginPassword; // password 반환
     }
-    public void setLoginPassword(String password) {
+    public void setLoginPassword(String loginPassword) {
         this.loginPassword = loginPassword; // password 저장
     }
 
     public String getUserName() {
         return userName; // 사용자 이름 반환
     }
-    public void setUserName(String UserName) {
+    public void setUserName(String userName) {
         this.userName = userName; // 사용자 이름 저장
     }
 

@@ -32,7 +32,7 @@ public class Schedule_service {
     //일정 생성 요청
     @Transactional
     public Long createSchedule(Schedule_req_dto dto) {
-        Tour_domain tour = tourRepo.getReferenceById(dto.getPlaceId());
+        Tour_domain tour = tourRepo.getReferenceById(dto.getTourId());
         Place_domain place = placeRepo.findById(dto.getPlaceId()).orElse(null);
         IsNull_rule.NullCheck(place, "장소가 존재하지 않습니다.");
 
