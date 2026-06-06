@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true) //: 읽기전용 - 무분별한 DB수정 방지
 public class Schedule_service {
     private final Schedule_repo scheduleRepo;   //repository 객체들
-    private final Tour_repo tourRepo;
+    private final Tour_repo tourRepo;           //JPA는 foreign key를 domain객체로 관리하게끔 강제함
     private final Place_repo placeRepo;
 
     public Schedule_service(Schedule_repo scheduleRepo, Tour_repo tourRepo, Place_repo placeRepo) {
