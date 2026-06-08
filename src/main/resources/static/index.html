@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOURNI</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0d0d; --sur:#141414; --sur2:#1c1c1c; --brd:#2a2a2a;
+  --acc:#c8a96e; --acc2:#e8c88e; --txt:#e8e4dc; --sub:#888; --dim:#444;
+  --red:#e06060; --rad:4px; --tr:.18s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Serif KR',serif;min-height:100vh;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+.hdr{padding:20px 28px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:14px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.hdr h1{font-size:12px;letter-spacing:.2em;color:var(--acc);font-weight:400;text-transform:uppercase;}
+.back{background:none;border:none;color:var(--sub);cursor:pointer;font-size:20px;line-height:1;transition:color var(--tr);}
+.back:hover{color:var(--acc);}
+.con{flex:1;padding:32px 28px;max-width:660px;width:100%;margin:0 auto;}
+input,select,textarea{width:100%;background:var(--sur2);border:1px solid var(--brd);border-radius:var(--rad);color:var(--txt);font-family:'Noto Serif KR',serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color var(--tr);}
+input:focus,select:focus{border-color:var(--acc);}
+input::placeholder{color:var(--dim);}
+select option{background:var(--sur2);}
+label{display:block;font-size:11px;letter-spacing:.14em;color:var(--sub);margin-bottom:7px;text-transform:uppercase;}
+.fld{margin-bottom:22px;}
+.btn{display:inline-block;padding:11px 26px;border:1px solid var(--acc);border-radius:var(--rad);background:transparent;color:var(--acc);font-family:'Noto Serif KR',serif;font-size:13px;cursor:pointer;letter-spacing:.08em;transition:background var(--tr),color var(--tr);}
+.btn:hover{background:var(--acc);color:var(--bg);}
+.btn-f{background:var(--acc);color:var(--bg);}
+.btn-f:hover{background:var(--acc2);border-color:var(--acc2);}
+.btn-w{width:100%;text-align:center;}
+.btn-s{padding:7px 14px;font-size:12px;}
+.btn-d{border-color:var(--red);color:var(--red);}
+.btn-d:hover{background:var(--red);color:#fff;}
+.btn-warn{border-color:#e0a060;color:#e0a060;}
+.btn-warn:hover{background:#e0a060;color:#fff;}
+.err{color:var(--red);font-size:12px;margin-top:7px;display:none;}
+.err.on{display:block;}
+.hr{border:none;border-top:1px solid var(--brd);margin:28px 0;}
+
+/* auth */
+#sa{justify-content:center;align-items:center;background:radial-gradient(ellipse at 60% 30%,#1a1408,var(--bg) 70%);}
+.abox{width:100%;max-width:370px;padding:0 20px;}
+.alogo{text-align:center;margin-bottom:44px;}
+.alogo h1{font-size:26px;font-weight:300;letter-spacing:.3em;color:var(--acc);}
+.alogo p{font-size:11px;color:var(--sub);letter-spacing:.2em;margin-top:5px;}
+.atabs{display:flex;border-bottom:1px solid var(--brd);margin-bottom:28px;}
+.atab{flex:1;padding:11px;text-align:center;cursor:pointer;font-size:12px;letter-spacing:.13em;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color var(--tr),border-color var(--tr);}
+.atab.on{color:var(--acc);border-bottom-color:var(--acc);}
+
+/* mypage */
+.mphdr{margin-bottom:32px;}
+.mphdr h2{font-size:20px;font-weight:300;}
+.mphdr p{color:var(--sub);font-size:13px;margin-top:5px;}
+.tlist{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.tcard{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);padding:18px 22px;cursor:pointer;transition:border-color var(--tr),background var(--tr);display:flex;justify-content:space-between;align-items:center;}
+.tcard:hover{border-color:var(--acc);background:var(--sur2);}
+.tcard-info h3{font-size:15px;font-weight:400;margin-bottom:3px;}
+.tcard-info p{font-size:12px;color:var(--sub);}
+.tcard-acts{display:flex;gap:8px;align-items:center;}
+.empty{text-align:center;padding:52px 0;color:var(--sub);font-size:14px;}
+
+/* 지역 */
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:28px;}
+.rbtn{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);padding:13px 6px;text-align:center;cursor:pointer;font-family:'Noto Serif KR',serif;font-size:13px;color:var(--txt);transition:border-color var(--tr),background var(--tr),color var(--tr);}
+.rbtn:hover,.rbtn.sel{border-color:var(--acc);background:var(--sur2);color:var(--acc);}
+.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.cbtn{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);padding:11px;text-align:center;cursor:pointer;font-family:'Noto Serif KR',serif;font-size:13px;color:var(--txt);transition:border-color var(--tr),background var(--tr),color var(--tr);}
+.cbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--sur2);}
+.stitle{font-size:11px;letter-spacing:.18em;color:var(--sub);margin-bottom:14px;text-transform:uppercase;}
+
+/* 관광지 목록 */
+.plist{display:flex;flex-direction:column;gap:12px;}
+.pcard{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);overflow:hidden;cursor:pointer;transition:border-color var(--tr);display:flex;}
+.pcard:hover{border-color:var(--acc);}
+.pimg{width:96px;min-height:96px;flex-shrink:0;background:var(--sur2);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:22px;overflow:hidden;}
+.pimg img{width:100%;height:100%;object-fit:cover;}
+.pbody{padding:14px 18px;flex:1;}
+.pbody h3{font-size:14px;font-weight:400;margin-bottom:5px;}
+.pbody p{font-size:12px;color:var(--sub);line-height:1.5;}
+.loading{text-align:center;padding:44px 0;color:var(--sub);}
+
+/* 관광지 상세 */
+.dimg{width:100%;height:220px;background:var(--sur2);object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--dim);margin-bottom:24px;border-radius:var(--rad);overflow:hidden;}
+.dimg img{width:100%;height:100%;object-fit:cover;}
+.dname{font-size:22px;font-weight:300;margin-bottom:7px;}
+.daddr{font-size:13px;color:var(--sub);margin-bottom:18px;}
+.ddesc{font-size:14px;line-height:1.8;color:var(--txt);margin-bottom:28px;}
+
+/* 일정 목록 화면 */
+.sched-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.sched-hdr h2{font-size:18px;font-weight:300;}
+.sched-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.scard{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.scard-info{}
+.scard-info .sdate{font-size:12px;color:var(--acc);letter-spacing:.08em;margin-bottom:4px;}
+.scard-info h3{font-size:14px;font-weight:400;margin-bottom:3px;}
+.scard-info p{font-size:12px;color:var(--sub);}
+.scard-acts{display:flex;gap:7px;flex-shrink:0;}
+.date2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.tour-badge{display:inline-block;background:var(--sur2);border:1px solid var(--brd);border-radius:12px;padding:3px 10px;font-size:11px;color:var(--sub);margin-bottom:16px;}
+
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--acc);color:var(--bg);padding:11px 26px;border-radius:var(--rad);font-size:13px;transition:transform .3s;z-index:999;pointer-events:none;}
+.toast.on{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--red);color:#fff;}
+
+/* modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;}
+.modal-bg.on{display:flex;}
+.modal{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rad);padding:28px 32px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:16px;font-weight:400;margin-bottom:20px;}
+.modal-acts{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+</style>
+</head>
+<body>
+
+<!-- ▌화면1 : 로그인/회원가입 -->
+<div id="sa" class="screen active">
+  <div class="abox">
+    <div class="alogo"><h1>JOURNI</h1><p>나만의 여행 플래너</p></div>
+    <div class="atabs">
+      <div class="atab on" onclick="tab('login')">로그인</div>
+      <div class="atab" onclick="tab('signup')">회원가입</div>
+    </div>
+    <div id="fl">
+      <div class="fld"><label>아이디</label><input id="li" placeholder="아이디"></div>
+      <div class="fld"><label>비밀번호</label><input id="lp" type="password" placeholder="비밀번호"></div>
+      <div class="err" id="le"></div>
+      <button class="btn btn-f btn-w" onclick="doLogin()" style="margin-top:6px">로그인</button>
+    </div>
+    <div id="fs" style="display:none">
+      <div class="fld"><label>아이디 (4자 이상)</label><input id="si"></div>
+      <div class="fld"><label>비밀번호 (8자 이상)</label><input id="sp" type="password"></div>
+      <div class="fld"><label>이름</label><input id="sn"></div>
+      <div class="fld"><label>이메일</label><input id="se" type="email"></div>
+      <div class="err" id="se2"></div>
+      <button class="btn btn-f btn-w" onclick="doSignup()" style="margin-top:6px">가입하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ▌화면2 : 마이페이지 -->
+<div id="smp" class="screen">
+  <div class="hdr">
+    <h1>JOURNI</h1>
+    <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+      <span id="mpname" style="font-size:12px;color:var(--sub)"></span>
+      <button class="btn btn-s btn-d" onclick="doLogout()">로그아웃</button>
+    </div>
+  </div>
+  <div class="con">
+    <div class="mphdr"><h2>내 여행</h2><p>여행을 선택하거나 새로 만드세요</p></div>
+    <div class="tlist" id="tlist"><div class="empty">저장된 여행이 없습니다</div></div>
+    <button class="btn btn-f btn-w" onclick="go('scr')">＋ 새 여행 만들기</button>
+  </div>
+</div>
+
+<!-- ▌화면3 : 여행 생성/수정 -->
+<div id="scr" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('smp')">←</button>
+    <h1 id="crTitle">새 여행 만들기</h1>
+  </div>
+  <div class="con">
+    <div class="fld"><label>여행 이름</label><input id="crName" placeholder="예) 경주 봄 여행"></div>
+    <div class="date2">
+      <div class="fld"><label>출발일</label><input id="crStart" type="date"></div>
+      <div class="fld"><label>귀환일</label><input id="crEnd" type="date"></div>
+    </div>
+    <div class="fld"><label>여행 유형</label><input id="crType" placeholder="예) 가족여행, 혼행, 커플"></div>
+    <div class="fld"><label>인원 수</label><input id="crNum" type="number" min="1" placeholder="명"></div>
+    <div class="err" id="crErr"></div>
+    <button class="btn btn-f btn-w" id="crBtn" onclick="doSaveTour()">다음 — 지역 선택</button>
+  </div>
+</div>
+
+<!-- ▌화면4 : 일정 목록 -->
+<div id="ssch" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('smp')">←</button>
+    <h1>일정 관리</h1>
+  </div>
+  <div class="con">
+    <div class="sched-hdr">
+      <div>
+        <div class="tour-badge" id="schBadge"></div>
+        <h2 id="schTourName"></h2>
+      </div>
+      <button class="btn btn-s btn-f" onclick="go('spv');renderProvinces()">＋ 관광지 추가</button>
+    </div>
+    <div class="sched-list" id="schList"><div class="empty">등록된 일정이 없습니다</div></div>
+  </div>
+</div>
+
+<!-- ▌화면5 : 도 선택 -->
+<div id="spv" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('ssch')">←</button>
+    <h1>지역 선택</h1>
+  </div>
+  <div class="con">
+    <p class="stitle">어느 지역으로 떠나시나요?</p>
+    <div class="rgrid" id="pvGrid"></div>
+  </div>
+</div>
+
+<!-- ▌화면6 : 시/군/구 선택 -->
+<div id="sct" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('spv')">←</button>
+    <h1 id="ctTitle">도시 선택</h1>
+  </div>
+  <div class="con">
+    <p class="stitle">세부 지역을 선택하세요</p>
+    <div class="cgrid" id="ctGrid"></div>
+  </div>
+</div>
+
+<!-- ▌화면7 : 관광지 목록 -->
+<div id="spl" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('sct')">←</button>
+    <h1 id="plTitle">관광지 추천</h1>
+  </div>
+  <div class="con">
+    <p class="stitle">마음에 드는 곳을 선택하세요</p>
+    <div class="plist" id="plList"><div class="loading">불러오는 중…</div></div>
+  </div>
+</div>
+
+<!-- ▌화면8 : 관광지 상세 -->
+<div id="sdt" class="screen">
+  <div class="hdr">
+    <button class="back" onclick="go('spl')">←</button>
+    <h1>관광지 상세</h1>
+  </div>
+  <div class="con">
+    <div class="dimg" id="dtImg">🏞</div>
+    <div class="dname" id="dtName"></div>
+    <div class="daddr" id="dtAddr"></div>
+    <div class="ddesc" id="dtDesc"></div>
+    <button class="btn btn-f btn-w" onclick="openSchedModal()">이곳으로 선택!</button>
+  </div>
+</div>
+
+<!-- ▌일정 등록/수정 모달 -->
+<div class="modal-bg" id="mSched">
+  <div class="modal">
+    <h3 id="mSchedTitle">일정 등록</h3>
+    <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:var(--rad);padding:14px 18px;margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:400;margin-bottom:3px" id="mPlaceName"></div>
+      <div style="font-size:12px;color:var(--sub)" id="mPlaceAddr"></div>
+    </div>
+    <div class="fld"><label>방문 날짜</label><input id="mDate" type="date"></div>
+    <div class="fld"><label>방문 시간</label><input id="mTime" type="time"></div>
+    <div class="err" id="mErr"></div>
+    <div class="modal-acts">
+      <button class="btn btn-s" onclick="closeModal('mSched')">취소</button>
+      <button class="btn btn-s btn-f" onclick="doSaveSchedule()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ▌여행 수정 모달 -->
+<div class="modal-bg" id="mTour">
+  <div class="modal">
+    <h3>여행 수정</h3>
+    <div class="fld"><label>여행 이름</label><input id="mtName"></div>
+    <div class="date2">
+      <div class="fld"><label>출발일</label><input id="mtStart" type="date"></div>
+      <div class="fld"><label>귀환일</label><input id="mtEnd" type="date"></div>
+    </div>
+    <div class="fld"><label>여행 유형</label><input id="mtType"></div>
+    <div class="fld"><label>인원 수</label><input id="mtNum" type="number" min="1"></div>
+    <div class="err" id="mtErr"></div>
+    <div class="modal-acts">
+      <button class="btn btn-s" onclick="closeModal('mTour')">취소</button>
+      <button class="btn btn-s btn-f" onclick="doUpdateTour()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ▌일정 수정 모달 -->
+<div class="modal-bg" id="mSchedEdit">
+  <div class="modal">
+    <h3>일정 수정</h3>
+    <div class="fld"><label>방문 날짜</label><input id="meDate" type="date"></div>
+    <div class="fld"><label>방문 시간</label><input id="meTime" type="time"></div>
+    <div class="err" id="meErr"></div>
+    <div class="modal-acts">
+      <button class="btn btn-s" onclick="closeModal('mSchedEdit')">취소</button>
+      <button class="btn btn-s btn-f" onclick="doUpdateSchedule()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── 설정 ── */
+const API = 'http://localhost:8080';
+
+/* ── 상태 ── */
+let S = {
+  userId: null, userName: null,
+  currentTour: null,       // {tourId, tourName, ...}
+  editTourId: null,        // 수정 중인 tourId
+  selectedPlace: null,     // API JsonNode
+  editSchedId: null,       // 수정 중인 scheduleId
+  province: null,          // {code, name}
+  city: null,              // {code, name}
+};
+
+/* ── 지역 데이터 (관광공사 3자리 시군구코드) ── */
+const REGIONS = [
+  {name:'서울',code:'11',cities:[
+    {n:'종로구',c:'010'},{n:'중구',c:'020'},{n:'용산구',c:'030'},{n:'성동구',c:'040'},
+    {n:'광진구',c:'050'},{n:'동대문구',c:'060'},{n:'중랑구',c:'070'},{n:'성북구',c:'080'},
+    {n:'강북구',c:'090'},{n:'도봉구',c:'100'},{n:'노원구',c:'110'},{n:'은평구',c:'120'},
+    {n:'서대문구',c:'130'},{n:'마포구',c:'140'},{n:'양천구',c:'150'},{n:'강서구',c:'160'},
+    {n:'구로구',c:'170'},{n:'금천구',c:'180'},{n:'영등포구',c:'190'},{n:'동작구',c:'200'},
+    {n:'관악구',c:'210'},{n:'서초구',c:'220'},{n:'강남구',c:'230'},{n:'송파구',c:'240'},{n:'강동구',c:'250'},
+  ]},
+  {name:'부산',code:'26',cities:[
+    {n:'중구',c:'010'},{n:'서구',c:'020'},{n:'동구',c:'030'},{n:'영도구',c:'040'},
+    {n:'부산진구',c:'050'},{n:'동래구',c:'060'},{n:'남구',c:'070'},{n:'북구',c:'080'},
+    {n:'해운대구',c:'090'},{n:'사하구',c:'100'},{n:'금정구',c:'110'},{n:'강서구',c:'120'},
+    {n:'연제구',c:'130'},{n:'수영구',c:'140'},{n:'사상구',c:'150'},{n:'기장군',c:'710'},
+  ]},
+  {name:'대구',code:'27',cities:[
+    {n:'중구',c:'010'},{n:'동구',c:'020'},{n:'서구',c:'030'},{n:'남구',c:'040'},
+    {n:'북구',c:'050'},{n:'수성구',c:'060'},{n:'달서구',c:'070'},{n:'달성군',c:'710'},
+  ]},
+  {name:'인천',code:'28',cities:[
+    {n:'중구',c:'010'},{n:'동구',c:'020'},{n:'미추홀구',c:'030'},{n:'연수구',c:'040'},
+    {n:'남동구',c:'050'},{n:'부평구',c:'060'},{n:'계양구',c:'070'},{n:'서구',c:'080'},
+    {n:'강화군',c:'710'},{n:'옹진군',c:'720'},
+  ]},
+  {name:'광주',code:'29',cities:[
+    {n:'동구',c:'010'},{n:'서구',c:'020'},{n:'남구',c:'030'},{n:'북구',c:'040'},{n:'광산구',c:'050'},
+  ]},
+  {name:'대전',code:'30',cities:[
+    {n:'동구',c:'010'},{n:'중구',c:'020'},{n:'서구',c:'030'},{n:'유성구',c:'040'},{n:'대덕구',c:'050'},
+  ]},
+  {name:'울산',code:'31',cities:[
+    {n:'중구',c:'010'},{n:'남구',c:'020'},{n:'동구',c:'030'},{n:'북구',c:'040'},{n:'울주군',c:'710'},
+  ]},
+  {name:'세종',code:'36',cities:[{n:'세종시',c:'010'}]},
+  {name:'경기',code:'41',cities:[
+    {n:'수원시',c:'010'},{n:'성남시',c:'130'},{n:'의정부시',c:'150'},{n:'안양시',c:'170'},
+    {n:'부천시',c:'190'},{n:'광명시',c:'210'},{n:'평택시',c:'220'},{n:'동두천시',c:'250'},
+    {n:'안산시',c:'270'},{n:'고양시',c:'280'},{n:'과천시',c:'290'},{n:'구리시',c:'310'},
+    {n:'남양주시',c:'360'},{n:'오산시',c:'370'},{n:'시흥시',c:'390'},{n:'군포시',c:'410'},
+    {n:'의왕시',c:'430'},{n:'하남시',c:'450'},{n:'용인시',c:'460'},{n:'파주시',c:'480'},
+    {n:'이천시',c:'500'},{n:'안성시',c:'550'},{n:'김포시',c:'570'},{n:'화성시',c:'590'},
+    {n:'광주시',c:'610'},{n:'양주시',c:'630'},{n:'포천시',c:'650'},{n:'여주시',c:'670'},
+    {n:'연천군',c:'800'},{n:'가평군',c:'820'},{n:'양평군',c:'830'},
+  ]},
+  {name:'강원',code:'42',cities:[
+    {n:'춘천시',c:'010'},{n:'원주시',c:'020'},{n:'강릉시',c:'030'},{n:'동해시',c:'040'},
+    {n:'태백시',c:'050'},{n:'속초시',c:'060'},{n:'삼척시',c:'070'},{n:'홍천군',c:'720'},
+    {n:'횡성군',c:'730'},{n:'영월군',c:'750'},{n:'평창군',c:'760'},{n:'정선군',c:'770'},
+    {n:'철원군',c:'780'},{n:'화천군',c:'790'},{n:'양구군',c:'800'},{n:'인제군',c:'810'},
+    {n:'고성군',c:'820'},{n:'양양군',c:'830'},
+  ]},
+  {name:'충북',code:'43',cities:[
+    {n:'청주시',c:'110'},{n:'충주시',c:'130'},{n:'제천시',c:'150'},{n:'보은군',c:'720'},
+    {n:'옥천군',c:'730'},{n:'영동군',c:'740'},{n:'증평군',c:'745'},{n:'진천군',c:'750'},
+    {n:'괴산군',c:'760'},{n:'음성군',c:'770'},{n:'단양군',c:'800'},
+  ]},
+  {name:'충남',code:'44',cities:[
+    {n:'천안시',c:'130'},{n:'공주시',c:'150'},{n:'보령시',c:'180'},{n:'아산시',c:'200'},
+    {n:'서산시',c:'210'},{n:'논산시',c:'230'},{n:'계룡시',c:'250'},{n:'당진시',c:'270'},
+    {n:'금산군',c:'710'},{n:'부여군',c:'760'},{n:'서천군',c:'770'},{n:'청양군',c:'790'},
+    {n:'홍성군',c:'800'},{n:'예산군',c:'810'},{n:'태안군',c:'825'},
+  ]},
+  {name:'전북',code:'45',cities:[
+    {n:'전주시',c:'110'},{n:'군산시',c:'130'},{n:'익산시',c:'140'},{n:'정읍시',c:'180'},
+    {n:'남원시',c:'190'},{n:'김제시',c:'210'},{n:'완주군',c:'710'},{n:'진안군',c:'720'},
+    {n:'무주군',c:'730'},{n:'장수군',c:'740'},{n:'임실군',c:'750'},{n:'순창군',c:'770'},
+    {n:'고창군',c:'790'},{n:'부안군',c:'800'},
+  ]},
+  {name:'전남',code:'46',cities:[
+    {n:'목포시',c:'110'},{n:'여수시',c:'130'},{n:'순천시',c:'150'},{n:'나주시',c:'170'},
+    {n:'광양시',c:'230'},{n:'담양군',c:'710'},{n:'곡성군',c:'720'},{n:'구례군',c:'730'},
+    {n:'고흥군',c:'770'},{n:'보성군',c:'780'},{n:'화순군',c:'790'},{n:'장흥군',c:'800'},
+    {n:'강진군',c:'810'},{n:'해남군',c:'820'},{n:'영암군',c:'830'},{n:'무안군',c:'840'},
+    {n:'함평군',c:'860'},{n:'영광군',c:'870'},{n:'장성군',c:'880'},{n:'완도군',c:'890'},
+    {n:'진도군',c:'900'},{n:'신안군',c:'910'},
+  ]},
+  {name:'경북',code:'47',cities:[
+    {n:'포항시',c:'110'},{n:'경주시',c:'130'},{n:'김천시',c:'150'},{n:'안동시',c:'170'},
+    {n:'구미시',c:'190'},{n:'영주시',c:'210'},{n:'영천시',c:'230'},{n:'상주시',c:'250'},
+    {n:'문경시',c:'280'},{n:'경산시',c:'290'},{n:'군위군',c:'720'},{n:'의성군',c:'730'},
+    {n:'청송군',c:'750'},{n:'영양군',c:'760'},{n:'영덕군',c:'770'},{n:'청도군',c:'820'},
+    {n:'고령군',c:'830'},{n:'성주군',c:'840'},{n:'칠곡군',c:'850'},{n:'예천군',c:'900'},
+    {n:'봉화군',c:'920'},{n:'울진군',c:'930'},{n:'울릉군',c:'940'},
+  ]},
+  {name:'경남',code:'48',cities:[
+    {n:'창원시',c:'120'},{n:'진주시',c:'170'},{n:'통영시',c:'220'},{n:'사천시',c:'240'},
+    {n:'김해시',c:'250'},{n:'밀양시',c:'270'},{n:'거제시',c:'310'},{n:'양산시',c:'330'},
+    {n:'의령군',c:'720'},{n:'함안군',c:'730'},{n:'창녕군',c:'740'},{n:'고성군',c:'820'},
+    {n:'남해군',c:'840'},{n:'하동군',c:'850'},{n:'산청군',c:'860'},{n:'함양군',c:'870'},
+    {n:'거창군',c:'880'},{n:'합천군',c:'890'},
+  ]},
+  {name:'제주',code:'50',cities:[{n:'제주시',c:'010'},{n:'서귀포시',c:'020'}]},
+];
+
+/* ── 유틸 ── */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast'+(err?' err':'')+' on';
+  setTimeout(()=>t.classList.remove('on'),2600);
+}
+function showErr(id,msg){
+  const e=document.getElementById(id);
+  e.textContent=msg; e.classList.add('on');
+  setTimeout(()=>e.classList.remove('on'),3000);
+}
+function openModal(id){document.getElementById(id).classList.add('on');}
+function closeModal(id){document.getElementById(id).classList.remove('on');}
+
+async function api(method,path,body){
+  const r=await fetch(API+path,{
+    method, headers:{'Content-Type':'application/json'},
+    body:body?JSON.stringify(body):undefined
+  });
+  if(!r.ok){const t=await r.text();throw new Error(t||r.status);}
+  const ct=r.headers.get('content-type')||'';
+  return ct.includes('json')?r.json():r.text();
+}
+
+/* ── 탭 ── */
+function tab(t){
+  document.querySelectorAll('.atab').forEach((el,i)=>el.classList.toggle('on',(i===0)===(t==='login')));
+  document.getElementById('fl').style.display=t==='login'?'':'none';
+  document.getElementById('fs').style.display=t==='signup'?'':'none';
+}
+
+/* ── 로그인 ── */
+async function doLogin(){
+  const loginId=document.getElementById('li').value.trim();
+  const loginPassword=document.getElementById('lp').value;
+  if(!loginId||!loginPassword){showErr('le','아이디와 비밀번호를 입력하세요');return;}
+  try{
+    const u=await api('POST','/user/login',{loginId,loginPassword});
+    S.userId=u.userId; S.userName=u.userName;
+    document.getElementById('mpname').textContent=u.userName+' 님';
+    await loadTours();
+    go('smp');
+  }catch(e){showErr('le','로그인 실패: '+e.message);}
+}
+
+/* ── 회원가입 ── */
+async function doSignup(){
+  const loginId=document.getElementById('si').value.trim();
+  const loginPassword=document.getElementById('sp').value;
+  const userName=document.getElementById('sn').value.trim();
+  const userEmail=document.getElementById('se').value.trim();
+  if(!loginId||!loginPassword||!userName||!userEmail){showErr('se2','모든 항목을 입력하세요');return;}
+  try{
+    await api('POST','/user/welcome',{loginId,loginPassword,userName,userEmail});
+    toast('가입 완료! 로그인하세요');tab('login');
+  }catch(e){showErr('se2','가입 실패: '+e.message);}
+}
+
+function doLogout(){S={userId:null,userName:null,currentTour:null,editTourId:null,selectedPlace:null,editSchedId:null};go('sa');}
+
+/* ── 여행 목록 ── */
+async function loadTours(){
+  const el=document.getElementById('tlist');
+  el.innerHTML='<div class="loading">불러오는 중…</div>';
+  try{
+    const all=await api('GET','/tour/all');
+    const mine=(all||[]).filter(t=>String(t.userId)===String(S.userId));
+    if(!mine.length){el.innerHTML='<div class="empty">저장된 여행이 없습니다</div>';return;}
+    el.innerHTML=mine.map(t=>`
+      <div class="tcard">
+        <div class="tcard-info" onclick="openTour(${t.tourId})">
+          <h3>${t.tourName||'제목없음'}</h3>
+          <p>${t.startDate||''}${t.startDate&&t.endDate?' → ':''}${t.endDate||''} · ${t.howMany||1}명 · ${t.tourType||''}</p>
+        </div>
+        <div class="tcard-acts">
+          <button class="btn btn-s btn-warn" onclick="openTourEdit(${t.tourId},'${(t.tourName||'').replace(/'/g,"\\'")}','${t.startDate||''}','${t.endDate||''}','${(t.tourType||'').replace(/'/g,"\\'")}',${t.howMany||1})">수정</button>
+          <button class="btn btn-s btn-d" onclick="doDeleteTour(${t.tourId})">삭제</button>
+        </div>
+      </div>`).join('');
+  }catch(e){el.innerHTML='<div class="empty">불러오기 실패</div>';}
+}
+
+/* ── 여행 클릭 → 일정 화면 ── */
+async function openTour(tourId){
+  const all=await api('GET','/tour/all').catch(()=>[]);
+  const t=(all||[]).find(x=>x.tourId===tourId);
+  S.currentTour=t||{tourId};
+  document.getElementById('schTourName').textContent=t?t.tourName:'여행';
+  document.getElementById('schBadge').textContent=
+    (t?.startDate||'')+(t?.startDate&&t?.endDate?' → ':'')+(t?.endDate||'')+' · '+(t?.howMany||1)+'명';
+  await loadSchedules(tourId);
+  go('ssch');
+}
+
+/* ── 일정 목록 ── */
+async function loadSchedules(tourId){
+  const el=document.getElementById('schList');
+  el.innerHTML='<div class="loading">불러오는 중…</div>';
+  try{
+    const list=await api('GET',`/schedule/list/${tourId}`);
+    if(!list||!list.length){el.innerHTML='<div class="empty">등록된 일정이 없습니다</div>';return;}
+    // 날짜+시간 오름차순 정렬
+    list.sort((a,b)=>{
+      const da=(a.visitDate||'')+(a.visitTime||'');
+      const db=(b.visitDate||'')+(b.visitTime||'');
+      return da<db?-1:da>db?1:0;
+    });
+    // placeId로 장소명 조회 (Place DB에서)
+    // Place 정보를 각 카드에 표시 (현재 백엔드가 placeName을 schedule에 포함하지 않으므로 placeId만 표시)
+    el.innerHTML=list.map((s,i)=>`
+      <div class="scard">
+        <div class="scard-info">
+          <div class="sdate">${s.visitDate||''} ${s.visitTime||''}</div>
+          <h3>장소 #${s.placeId}</h3>
+          <p>일정 ID: ${s.scheduleId}</p>
+        </div>
+        <div class="scard-acts">
+          <button class="btn btn-s btn-warn" onclick="openSchedEdit(${s.scheduleId},'${s.visitDate||''}','${s.visitTime||''}')">수정</button>
+          <button class="btn btn-s btn-d" onclick="doDeleteSchedule(${s.scheduleId})">삭제</button>
+        </div>
+      </div>`).join('');
+  }catch(e){el.innerHTML='<div class="empty">일정 불러오기 실패</div>';}
+}
+
+/* ── 여행 생성 ── */
+function initCreateForm(){
+  document.getElementById('crTitle').textContent='새 여행 만들기';
+  document.getElementById('crBtn').textContent='다음 — 지역 선택';
+  document.getElementById('crName').value='';
+  document.getElementById('crStart').value='';
+  document.getElementById('crEnd').value='';
+  document.getElementById('crType').value='';
+  document.getElementById('crNum').value='';
+  S.editTourId=null;
+}
+
+async function doSaveTour(){
+  const tourName=document.getElementById('crName').value.trim();
+  const startDate=document.getElementById('crStart').value;
+  const endDate=document.getElementById('crEnd').value;
+  const tourType=document.getElementById('crType').value.trim();
+  const howMany=parseInt(document.getElementById('crNum').value)||1;
+  if(!tourName){showErr('crErr','여행 이름을 입력하세요');return;}
+  try{
+    const t=await api('POST','/tour/create',{userId:S.userId,tourName,startDate,endDate,tourType,howMany});
+    S.currentTour=t;
+    toast('여행이 생성되었습니다');
+    renderProvinces();
+    go('spv');
+  }catch(e){showErr('crErr','생성 실패: '+e.message);}
+}
+
+/* ── 여행 수정 모달 ── */
+function openTourEdit(tourId,name,start,end,type,num){
+  S.editTourId=tourId;
+  document.getElementById('mtName').value=name;
+  document.getElementById('mtStart').value=start;
+  document.getElementById('mtEnd').value=end;
+  document.getElementById('mtType').value=type;
+  document.getElementById('mtNum').value=num;
+  openModal('mTour');
+}
+async function doUpdateTour(){
+  const tourName=document.getElementById('mtName').value.trim();
+  const startDate=document.getElementById('mtStart').value;
+  const endDate=document.getElementById('mtEnd').value;
+  const tourType=document.getElementById('mtType').value.trim();
+  const howMany=parseInt(document.getElementById('mtNum').value)||1;
+  if(!tourName){showErr('mtErr','여행 이름을 입력하세요');return;}
+  try{
+    // PUT /tour/{userId}/{tourId} 가 없으므로 DELETE → POST 방식 사용
+    // 백엔드에 PUT /tour/update 엔드포인트가 없어 재생성 방식
+    await api('DELETE',`/tour/${S.userId}/${S.editTourId}`);
+    await api('POST','/tour/create',{userId:S.userId,tourName,startDate,endDate,tourType,howMany});
+    closeModal('mTour');
+    toast('여행이 수정되었습니다');
+    await loadTours();
+  }catch(e){showErr('mtErr','수정 실패: '+e.message);}
+}
+
+/* ── 여행 삭제 ── */
+async function doDeleteTour(tourId){
+  if(!confirm('이 여행을 삭제하시겠습니까? 관련 일정도 모두 삭제됩니다.'))return;
+  try{
+    await api('DELETE',`/tour/${S.userId}/${tourId}`);
+    toast('여행이 삭제되었습니다');
+    await loadTours();
+  }catch(e){toast('삭제 실패: '+e.message,true);}
+}
+
+/* ── 도 선택 ── */
+function renderProvinces(){
+  document.getElementById('pvGrid').innerHTML=REGIONS.map(r=>
+    `<div class="rbtn" onclick="selectProvince('${r.code}','${r.name}')">${r.name}</div>`
+  ).join('');
+}
+
+function selectProvince(code,name){
+  S.province={code,name};
+  document.getElementById('ctTitle').textContent=name+' — 지역 선택';
+  const r=REGIONS.find(x=>x.code===code);
+  document.getElementById('ctGrid').innerHTML=(r?.cities||[]).map(c=>
+    `<div class="cbtn" onclick="selectCity('${c.c}','${c.n}')">${c.n}</div>`
+  ).join('');
+  go('sct');
+}
+
+/* ── 도시 선택 ── */
+async function selectCity(code,name){
+  S.city={code,name};
+  document.getElementById('plTitle').textContent=name+' 관광지';
+  go('spl');
+  await loadPlaces();
+}
+
+/* ── 관광지 목록 ── */
+async function loadPlaces(){
+  const el=document.getElementById('plList');
+  el.innerHTML='<div class="loading">관광지 불러오는 중…</div>';
+  try{
+    const list=await api('POST','/recomm/recommend',{
+      province:S.province.code,
+      city:S.city.code,
+      theme:''
+    });
+    if(!list||!list.length){
+      // fallback: keyword 검색
+      const fb=await api('GET',`/tour/search?keyword=${encodeURIComponent(S.city.name)}`);
+      window._places=fb||[];
+    } else {
+      window._places=(list||[]).slice(0,5);
+    }
+    if(!window._places.length){
+      el.innerHTML='<div class="empty">해당 지역 관광지 정보가 없습니다</div>';return;
+    }
+    el.innerHTML=window._places.map((p,i)=>`
+      <div class="pcard" onclick="selectPlace(${i})">
+        <div class="pimg">${p.firstimage?`<img src="${p.firstimage}" onerror="this.parentElement.textContent='🏞'">` :'🏞'}</div>
+        <div class="pbody">
+          <h3>${p.title||'관광지'}</h3>
+          <p>${p.addr1||'주소 없음'}</p>
+        </div>
+      </div>`).join('');
+  }catch(e){el.innerHTML=`<div class="empty">불러오기 실패: ${e.message}</div>`;}
+}
+
+/* ── 관광지 상세 ── */
+function selectPlace(i){
+  const p=window._places[i];
+  S.selectedPlace=p;
+  const img=p.firstimage||'';
+  document.getElementById('dtImg').innerHTML=img?`<img src="${img}" onerror="this.parentElement.textContent='🏞'">`:'🏞';
+  document.getElementById('dtName').textContent=p.title||'관광지';
+  document.getElementById('dtAddr').textContent='📍 '+(p.addr1||'주소 없음');
+  document.getElementById('dtDesc').textContent=p.overview||p.cat1name||'상세 설명이 없습니다.';
+  go('sdt');
+}
+
+/* ── 일정 등록 모달 열기 ── */
+function openSchedModal(){
+  const p=S.selectedPlace;
+  if(!p)return;
+  document.getElementById('mSchedTitle').textContent='일정 등록';
+  document.getElementById('mPlaceName').textContent=p.title||'관광지';
+  document.getElementById('mPlaceAddr').textContent=p.addr1||'';
+  document.getElementById('mDate').value='';
+  document.getElementById('mTime').value='';
+  S.editSchedId=null;
+  openModal('mSched');
+}
+
+/* ── 일정 저장 ── */
+async function doSaveSchedule(){
+  const visitDate=document.getElementById('mDate').value;
+  const visitTime=document.getElementById('mTime').value;
+  if(!visitDate){showErr('mErr','날짜를 선택하세요');return;}
+  if(!S.currentTour?.tourId){showErr('mErr','여행 정보가 없습니다');return;}
+  try{
+    // 1) Place DB 저장
+    const placeId=await api('POST','/tour/save',S.selectedPlace);
+    // 2) Schedule 저장
+    await api('POST','/schedule/save',{
+      tourId:S.currentTour.tourId,
+      placeId,visitDate,visitTime
+    });
+    closeModal('mSched');
+    toast('일정이 저장되었습니다 ✓');
+    // 일정 화면으로 이동
+    setTimeout(async()=>{
+      await loadSchedules(S.currentTour.tourId);
+      go('ssch');
+    },800);
+  }catch(e){showErr('mErr','저장 실패: '+e.message);}
+}
+
+/* ── 일정 수정 모달 ── */
+function openSchedEdit(scheduleId,date,time){
+  S.editSchedId=scheduleId;
+  document.getElementById('meDate').value=date;
+  document.getElementById('meTime').value=time;
+  openModal('mSchedEdit');
+}
+async function doUpdateSchedule(){
+  const visitDate=document.getElementById('meDate').value;
+  const visitTime=document.getElementById('meTime').value;
+  if(!visitDate){showErr('meErr','날짜를 선택하세요');return;}
+  try{
+    await api('PUT',`/schedule/update/${S.editSchedId}`,{
+      placeId: 0,  // 장소 변경 없이 날짜/시간만 수정
+      visitDate, visitTime
+    });
+    closeModal('mSchedEdit');
+    toast('일정이 수정되었습니다');
+    await loadSchedules(S.currentTour.tourId);
+  }catch(e){showErr('meErr','수정 실패: '+e.message);}
+}
+
+/* ── 일정 삭제 ── */
+async function doDeleteSchedule(scheduleId){
+  if(!confirm('이 일정을 삭제하시겠습니까?'))return;
+  try{
+    await api('DELETE',`/schedule/delete/${scheduleId}`);
+    toast('일정이 삭제되었습니다');
+    await loadSchedules(S.currentTour.tourId);
+  }catch(e){toast('삭제 실패: '+e.message,true);}
+}
+
+/* ── 초기화 ── */
+renderProvinces();
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on');});
+});
+</script>
+</body>
+</html>

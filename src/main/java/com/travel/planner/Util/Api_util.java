@@ -25,11 +25,14 @@ public class Api_util {
                 + "&_type=json"; //JSON형식으로 반환해주세요
     }
     public static String Region_Tour_url(String keyword, String lDongRegnCd, String lDongSignguCd) {
+        /*
         String processedSignguCd = lDongSignguCd;
+
         if (lDongSignguCd != null && lDongSignguCd.length() == 5) {
             processedSignguCd = lDongSignguCd.substring(2); //index 0 1 2 3 4 중 2부터 인식
             // 한국관광공사 메뉴얼에 따라 프론트에서 보내는 5자리 지역값을 뒤의 3자리로 변경
         }
+         */
 
         String url = Area_based_url
                 + "?serviceKey=" + My_Servicekey
@@ -39,7 +42,7 @@ public class Api_util {
                 + "&MobileApp=AppTest"
                 + "&arrange=C"        // 최신순 정렬 권장
                 + "&lDongRegnCd=" + lDongRegnCd //법정동 시도 코드
-                + "&lDongSignguCd=" + processedSignguCd //법정동 시군구 코드
+                + "&lDongSignguCd=" + lDongSignguCd //+ processedSignguCd //법정동 시군구 코드
                 + "&_type=json";
 
         // 키워드가 있으면 추가 (없으면 지역 전체 검색)

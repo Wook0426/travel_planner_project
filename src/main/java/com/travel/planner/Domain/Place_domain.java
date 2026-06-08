@@ -6,8 +6,8 @@ import java.util.List;
 
 @Entity //이 클래스가 db테이블 자체이다.
 @Table(name = "Place") //그 중에서 Place테이블이다.
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //상속 구조 사용 - 부모/자식 분리
-@DiscriminatorColumn(name = "placeType") //타입으로 분리
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //상속 구조 사용 - 부모/자식 분리
+//@DiscriminatorColumn(name = "placeType") //타입으로 분리
 public class Place_domain { //직접 객체 생성 불가능한 클래스
     @Id //primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment 설명

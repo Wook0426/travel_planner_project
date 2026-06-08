@@ -14,7 +14,7 @@ import java.util.List;
 /*
 [spring 웹 기능]
     @RestController	    컨트롤러 지정
-    @GetMapping	GET     요청 처리
+    @GetMapping	        요청 처리
     @PostMapping	    POST 요청 처리
     @RequestParam	    URL 값 받기
     @RequestBody	    JSON 데이터 받기
@@ -40,7 +40,7 @@ public class Place_control {
     }
 
     @PostMapping("/save")
-    public Long savaPlave(@RequestBody JsonNode item) {
+    public Long savePlace(@RequestBody JsonNode item) {
         return place_service.saveFromApi(item);
     }
     /*

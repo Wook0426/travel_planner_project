@@ -43,7 +43,7 @@ public class Tour_control {
     ) {
         return api_service.callTourApi(keyword);
     }
-    //여행 저장
+    //여행 생성
     @PostMapping("/create") //Post요청 : /tour/create
     public Tour_resp_dto createTour(
             @RequestBody
