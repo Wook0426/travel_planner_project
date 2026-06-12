@@ -15,7 +15,7 @@ public class Place_service {
     }
 
     @Transactional
-    public Long saveFromApi(JsonNode item) {
+    public Long saveFromApi(JsonNode item) { //매개변수가 계층구조의 노드에 있는 관광지 배열
         Place_domain place = new Place_domain();
         place.setPlaceName(item.path("title").asText());
         place.setPlaceAddress(item.path("addr1").asText());
