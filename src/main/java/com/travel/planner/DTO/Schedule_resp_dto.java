@@ -6,6 +6,7 @@ public class Schedule_resp_dto {
     private Long placeId;
     private String visitDate;
     private String visitTime;
+    private String placeName;
 
     public Schedule_resp_dto() {
         //DB 저장 결과 반환용 생성자
@@ -44,5 +45,11 @@ public class Schedule_resp_dto {
     }
     public void setVisitTime(String visitTime) {
         this.visitTime = visitTime;
+    }
+    public String getPlaceName() {
+        return placeName;
+    }
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 }

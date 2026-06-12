@@ -17,6 +17,9 @@ public class Schedule_domain {
     @JoinColumn(name = "placeId") // schedule은 tour와 place 둘 모두와 틀을 공유하므로 join연결한다.
     private Place_domain placeId;
 
+    @Column
+    private String placeName;
+
     @Column(name = "visitDate") //날짜 칼럼
     private String visitDate;
 
@@ -56,5 +59,16 @@ public class Schedule_domain {
     }
     public void setVisitTime(String visitTime) {
         this.visitTime = visitTime;
+    }
+    public String getPlaceName() {
+        return placeName;
+    }
+    public void setPlaceName(String placeName) {
+        // 만약 Place 객체(placeId)가 비어있지 않다면, 거기서 실시간으로 이름을 가져와 저장할 수도 있습니다.
+        if (this.placeId != null && placeName == null) {
+            this.placeName = this.placeId.getPlaceName();
+        } else {
+            this.placeName = placeName;
+        }
     }
 }

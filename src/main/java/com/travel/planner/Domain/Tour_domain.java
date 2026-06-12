@@ -1,4 +1,6 @@
 package com.travel.planner.Domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*; //JPA 관련기능으로, @entity, @table, @id 어노테이션 사용
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,12 @@ public class Tour_domain {
     @ManyToOne(fetch = FetchType.LAZY)
     //여러 Tour가 하나의 User를 참조하기 때문에 Tour조회 시 User를 즉시 가져오지 않아 성능향상됨
     @JoinColumn(name = "userId") //userId로 User테이블 연결(tour 테이블과)
+    @JsonIgnore
     private User_domain userId; //사용자 (user_domain 객체)
+    @JsonProperty("userId")
+    public Long getSimpleUserId() {
+        return this.userId != null ? this.userId.getUserId() : null;
+    }
 
     @OneToMany(mappedBy = "tourId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Place_domain> placeId = new ArrayList<>();

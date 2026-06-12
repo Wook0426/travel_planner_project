@@ -39,6 +39,7 @@ public class Schedule_service {
         Schedule_domain schedule = new Schedule_domain(); //일정이 있다면 객체 생성
         schedule.setTourId(tour);
         schedule.setPlaceId(place); //존재하는 장소 세팅
+        schedule.setPlaceName(place.getPlaceName());
         schedule.setVisitDate(dto.getVisitDate());
         schedule.setVisitTime(dto.getVisitTime());
 
@@ -62,6 +63,7 @@ public class Schedule_service {
         IsNull_rule.NullCheck(newPlace, "등록된 장소가 없습니다.");
 
         schedule.setPlaceId(newPlace);
+        schedule.setPlaceName(newPlace.getPlaceName());
         schedule.setVisitDate(dto.getVisitDate());
         schedule.setVisitTime(dto.getVisitTime());
     }
@@ -82,6 +84,26 @@ public class Schedule_service {
 
         respDto.setVisitDate(schedule.getVisitDate());
         respDto.setVisitTime(schedule.getVisitTime());
+        respDto.setPlaceName(schedule.getPlaceName());
         return respDto;
+    }
+    public Schedule_domain createSchedule(Long tourId, Long placeId, String visitDate, String visitTime) {
+        // 1. 프론트에서 넘겨준 장소 ID로 Place 테이블에서 장소 객체를 통째로 찾습니다.
+        Place_domain place = placeRepo.findById(placeId).orElse(null);
+
+        Schedule_domain schedule = new Schedule_domain();
+        // schedule.setTourId(...); // 여행 세팅
+        schedule.setPlaceId(place);   // 장소 외래키 세팅
+
+        if (place != null) {
+            schedule.setPlaceName(place.getPlaceName()); //  place 테이블로부터 이름을 받아와 맞추는 코드
+        }
+
+        schedule.setVisitDate(visitDate);
+        schedule.setVisitTime(visitTime);
+
+        // 2. DB에 저장합니다. 이제 Schedule 테이블의 placeName 컬럼에도 장소명이 저장됩니다.
+        return scheduleRepo.save(schedule);
+
     }
 }

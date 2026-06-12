@@ -1,4 +1,4 @@
-package com.travel.planner.DTO;
+/*package com.travel.planner.DTO;
 
 public class Review_req_dto {
     private Long userId;
@@ -38,3 +38,6 @@ public class Review_req_dto {
         this.Content = Content;
     }
 }
+
+
+ */
